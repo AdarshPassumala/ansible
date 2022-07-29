@@ -1,0 +1,8 @@
+---
+   directory_path: "/opt/app/7-gce" 
+   honcho_command: "/opt/app/7-gce/env/bin/honcho start -f ./procfile worker bookshelf"
+   virtualenv_path: "/opt/app/7-gce/env"
+   bin_path: "/opt/app/7-gce/env/bin"
+   supervisord_service_template: "supervisor.service.j2"
+   supervisord_service_path: "/etc/supervisor/conf.d/python-app.conf"
+# vars file for app-config

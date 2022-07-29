@@ -1,0 +1,62 @@
+---
+  
+    
+    - name: install git
+      apt:
+       name: git 
+       state: present
+    - name: installing build essential
+      apt:
+       name: build-essential
+       state: present
+    - name: installing supervisor
+      apt:
+       name: supervisor
+       state: present
+    - name: installing python
+      apt:
+       name: python
+       state: present
+    - name: installing python-dev
+      apt:
+       name: python-dev
+       state: present
+    - name: installing pip
+      apt:
+       name: python-pip
+       state: present
+    - name: installing pytho3-pip
+      apt:
+       name: python3-pip
+       state: present
+    - name: installing libffi-dev
+      apt:
+       name: libffi-dev
+       state: present
+    - name: installing libssl-dev
+      apt:
+       name: libssl-dev
+       state: present
+    - name: creating a python user
+      user:
+       name: pythonapp
+       home: /home/pythonapp
+    - name: installing virtual env
+      pip:
+       name: virtualenv
+       state: present
+
+    - name: configure a helper for credentials
+      command: "git config --global credential.helper gcloud.sh"
+
+    - name: congiguring and cloning the git repo
+      git:
+       repo: https://source.developers.google.com/p/terraform-bookshelf-app/r/adarsh-repo 
+       version: steps
+       dest: /opt/app
+
+    - name: create a folder
+      file:
+       name: /opt/app/env
+       state: directory
+   # tasks file for app-config

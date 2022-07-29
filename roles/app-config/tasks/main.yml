@@ -1,0 +1,88 @@
+
+---
+  
+    
+    - name: install git
+      apt:
+       name: git 
+       state: present
+    - name: installing build essential
+      apt:
+       name: build-essential
+       state: present
+    - name: installing supervisor
+      apt:
+       name: supervisor
+       state: present
+    - name: installing python
+      apt:
+       name: python
+       state: present
+    - name: installing python-dev
+      apt:
+       name: python-dev
+       state: present
+    - name: installing pip
+      apt:
+       name: python-pip
+       state: present
+    - name: installing pytho3-pip
+      apt:
+       name: python3-pip
+       state: present
+    - name: installing libffi-dev
+      apt:
+       name: libffi-dev
+       state: present
+    - name: installing libssl-dev
+      apt:
+       name: libssl-dev
+       state: present
+    - name: creating a python user
+      user:
+       name: pythonapp
+       home: /home/pythonapp
+    - name: installing virtual env
+      pip:
+       name: virtualenv
+       state: present
+
+    - name: configure a helper for credentials
+      command: "git config --global credential.helper gcloud.sh"
+
+    - name: congiguring and cloning the git repo
+      git:
+       repo: https://source.developers.google.com/p/terraform-bookshelf-app/r/adarsh-repo 
+       version: steps
+       dest: /opt/app
+
+    - name: create a folder
+      file:
+       name: /opt/app/7-gce/env
+       state: directory
+    - name: installing python in virtual env
+      pip:
+       virtualenv: /opt/app/7-gce/env
+       virtualenv_python: python3
+       virtualenv_command: virtualenv
+       requirements: /opt/app/7-gce/requirements.txt
+       extra_args: --prefer-binary
+    - name: changing the owner
+      file: 
+       path: /opt/app
+       owner: pythonapp
+       group: pythonapp
+    - name: Update supervisor service path from template
+      template:
+       src: supervisor.service.j2
+       dest:  "/etc/supervisor/conf.d/python-app.conf"
+       owner: "root"
+       group: "root"
+       mode: 0777
+    - name: restarting application and rereading supervisord
+      become: yes
+      community.general.supervisorctl:
+       name: pythonapp
+       state: present
+
+# tasks file for app-config

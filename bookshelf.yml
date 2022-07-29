@@ -1,0 +1,12 @@
+---
+
+ - name: bookshelf application
+   hosts: ansible
+   become: true
+   vars_files:
+    - roles/cloud-sql-proxy/vars/default.yml    
+  
+   roles :
+     - fluentd 
+     - cloud-sql-proxy
+     - app-config
